@@ -1,0 +1,150 @@
+/* Settings Page - Optimized and Mobile-Responsive */
+
+.settings-page {
+  min-height: 100vh;
+  padding: 1.5rem;
+  background: linear-gradient(to bottom right, #e8eaf6, #fce4ec);
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  max-width: 480px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.back-button {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: inline-block;
+  transition: color 0.2s ease;
+  margin-left: -0.5rem; /* Or try -1rem for more */
+  padding-left: 0; /* Optional: removes default spacing */
+}
+
+
+.back-button:hover {
+  color: #a6b2f2;
+}
+
+.settings-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+}
+
+.settings-section h3 {
+  font-size: inherit;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+/* Dropdown Styles */
+.custom-select {
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  margin-top: 0.5rem;
+}
+.select-trigger {
+  padding: 2px;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;  
+}
+.select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: rgb(248, 247, 247);
+  width: 40%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 600;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.select-option {
+  padding: 10px;
+  cursor: pointer;
+}
+.select-option:hover {
+  background-color: #ecc19b;
+}
+/*dropdown end*/
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+.password-input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  padding-right: 2.5rem; /* room for eye icon */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  box-sizing: border-box;
+}
+.password-toggle {
+  position: absolute;
+  top: 40%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #777;
+  padding: 0;
+}
+.settings-section form {
+  position: relative;
+  z-index: 200; /* ✅ Ensure this is above the dropdown */
+}
+
+button[type="submit"] {
+  background: linear-gradient(135deg, #FF74A4, #FFB74D);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 60%;
+ 
+}
+button[type="submit"]:hover {
+  
+  transform: translateY(-2px);
+}
+
+button[type="submit"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(166, 178, 242, 0.8);
+}
+
+
+@media screen and (max-width: 500px) {
+  .settings-field {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .settings-field label {
+    text-align: left;
+    margin-bottom: 0.25rem;
+  }
+  .select-trigger {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+  .select-dropdown {
+    font-size: 0.9rem;
+  }
+}

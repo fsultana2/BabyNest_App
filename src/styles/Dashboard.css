@@ -1,0 +1,88 @@
+/*dashboard logo, dropdown name and email*/
+.dashboard-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #e8eaf6, #fce4ec); 
+    font-family: 'Inter', sans-serif;
+    color: #333;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    position: relative;
+    padding: 0.75rem 1.2rem; /* Adjust spacing if needed */
+  }
+  
+  .dashboard-logo {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    gap: 0.5rem;
+    gap: 0.5rem;
+  margin-left: -0.5rem; /* ⬅️ shift the logo block slightly left */
+  }
+  
+  .header-logo-img {
+    height: 28px;
+    width: 28px;
+    object-fit: contain;
+  }
+  
+  
+  .dashboard-user {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .dashboard-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #a6b2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .dashboard-dropdown {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 220px;
+    z-index: 10;
+  }
+  
+  .dashboard-dropdown-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .dashboard-dropdown-header p {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+  }
+  
+  .dashboard-dropdown-option {
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: #333;
+  }
+  .dashboard-dropdown-option:hover {
+    color: #0077b6; /* Nice soft blue on hover */
+  }
+  /*dashboard logo, dropdown name and email*/
+  
