@@ -1,53 +1,47 @@
 import React, { useState } from 'react';
-import UserDropdown from './UserDropdown';
-import { useNavigate } from 'react-router-dom';
-import '../styles/Dashboard.css';
-import babyLogo from '../assets/logo.png'; // ✅ Use your actual logo
+import UserDropdown from './UserDropdown'; // Already renamed internally
+import logo from '../assets/logo.png';
+import '../styles/Header.css'; // Scoped dropdown styles here
 
 interface HeaderProps {
-  email: string;
   name: string;
+  email: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ email, name }) => {
-  const navigate = useNavigate();
+const Header: React.FC<HeaderProps> = ({ name, email }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleSignOut = () => {
-    localStorage.removeItem('user');
-    alert("✅ You've been signed out.");
-    navigate('/');
-  };
+  const initials = name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
 
-  const getInitials = (fullName: string) => {
-    return fullName
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
+  const handleSignOut = () => {
+    localStorage.clear();
+    window.location.href = '/login'; // Or use navigate if preferred
   };
 
   return (
     <header className="dashboard-header">
-      {/* ✅ Replacing emoji with actual logo image */}
-      <div className="dashboard-logo">
-        <img
-          src={babyLogo}
-          alt="BabyNest Logo"
-          className="header-logo-img"
-        />
-        <span>BabyNest</span>
+      <div className="header-left">
+      <img src={logo} alt="BabyNest Logo" className="logo" />
+        <span className="app-name">BabyNest</span>
       </div>
 
-      <div
-        className="dashboard-user"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-      >
-        <div className="dashboard-initials">{getInitials(name)}</div>
-        {dropdownOpen && (
-          <UserDropdown email={email} name={name} onSignOut={handleSignOut} />
-        )}
-      </div>
+      <div className="user-dropdown-wrapper">
+  <button
+    className="initials-button"
+    onClick={() => setDropdownOpen(!dropdownOpen)}
+  >
+    {initials}
+  </button>
+
+  {dropdownOpen && (
+    <UserDropdown name={name} email={email} onSignOut={handleSignOut} />
+  )}
+</div>
+
     </header>
   );
 };

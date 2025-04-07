@@ -4,20 +4,20 @@ import { Link } from 'react-router-dom';
 interface UserDropdownProps {
   name: string;
   email: string;
-  onSignOut: () => void; // ✅ Accepts a sign out handler
+  onSignOut: () => void;
 }
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ name, email, onSignOut }) => {
   return (
-    <div className="dashboard-dropdown">
-      <div className="dashboard-dropdown-header">
+    <div className="user-menu-dropdown">
+      <div className="user-menu-header">
         <strong>{name}</strong>
         <p>{email}</p>
       </div>
-      <div className="dashboard-dropdown-option">
+      <div className="user-menu-option">
         <Link to="/settings">⚙️ Settings</Link>
       </div>
-      <div className="dashboard-dropdown-option" onClick={onSignOut}>
+      <div className="user-menu-option" onClick={onSignOut}>
         ↩️ Sign out
       </div>
     </div>

@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, Moon, Baby, Play, Droplet, Book, Music, FileText, Camera } from 'lucide-react';
+import {
+  ChevronDown,
+  Moon,
+  Baby,
+  Play,
+  Droplet,
+  Book,
+  Music,
+  FileText,
+  Camera,
+} from 'lucide-react';
 import '../styles/Home.css';
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState<'dashboard' | 'profiles'>('dashboard');
   const [selectedChild, setSelectedChild] = useState('');
-  const navigate = useNavigate();
 
   return (
-    <div className="home-container">
+    <div className="home-page">
       {/* Toggle Bar */}
       <div className="toggle-bar">
         <button
@@ -41,7 +51,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Upload Section */}
+      {/* Upload Avatar */}
       <div className="upload-section">
         <div className="upload-circle">
           <Camera size={32} color="#777" />
@@ -69,21 +79,21 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Summary Section */}
+      {/* Summary */}
       <div className="summary-section">
         <h3 className="summary-title">Today's Summary</h3>
         <div className="summary-grid">
           <div className="summary-card">
-            <strong>Feedings:</strong> <span>4</span>
+            <strong>Feedings:</strong> 4
           </div>
           <div className="summary-card">
-            <strong>Sleep:</strong> <span>8.5 hrs</span>
+            <strong>Sleep:</strong> 8.5 hrs
           </div>
           <div className="summary-card">
-            <strong>Diapers:</strong> <span>6</span>
+            <strong>Diapers:</strong> 6
           </div>
           <div className="summary-card">
-            <strong>Play:</strong> <span>2 hrs</span>
+            <strong>Play:</strong> 2 hrs
           </div>
         </div>
       </div>

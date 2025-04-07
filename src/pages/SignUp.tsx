@@ -1,17 +1,11 @@
-import useRecentValues from '../hooks/useRecentValues';
+// src/pages/SignUp.tsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
-import '../styles/Login.css'; // Reusing login styles
+import { useNavigate } from 'react-router-dom';
+import useRecentValues from '../hooks/useRecentValues';
+import '../styles/Login.css';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-
-  const {
-    values: recentEmails,
-    addValue: addEmail,
-    deleteValue: deleteEmail,
-  } = useRecentValues('recentEmails');
 
   const {
     values: recentFirstNames,
@@ -22,12 +16,14 @@ const SignUp: React.FC = () => {
   const {
     values: recentLastNames,
     addValue: addLastName,
-    deleteValue: deleteLastName
+    deleteValue: deleteLastName,
   } = useRecentValues('recentLastNames');
 
-  const [showLastNameDropdown, setShowLastNameDropdown] = useState(false);
-  const [showEmailDropdown, setShowEmailDropdown] = useState(false);
-  const [showFirstNameDropdown, setShowFirstNameDropdown] = useState(false);
+  const {
+    values: recentEmails,
+    addValue: addEmail,
+    deleteValue: deleteEmail,
+  } = useRecentValues('recentEmails');
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -38,281 +34,185 @@ const SignUp: React.FC = () => {
     confirmPassword: '',
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDropdowns, setShowDropdowns] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+    setShowDropdowns((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleDropdownSelect = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setShowDropdowns((prev) => ({ ...prev, [field]: false }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const fullName = `${formData.firstName} ${formData.lastName}`;
-    const email = formData.email;
-
-    // Storing data in localStorage
     localStorage.setItem('userName', fullName);
-    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userEmail', formData.email);
 
-    // Add recent values
-    addEmail(email);
     addFirstName(formData.firstName);
     addLastName(formData.lastName);
+    addEmail(formData.email);
 
-    // Alert notification to the user
-    alert('✅ Sign up successful! You can now log in.');
-
-    // After the alert, navigate to the login page
+    alert('✅ Sign up successful!');
     navigate('/');
   };
+
+  const filterSuggestions = (list: string[], query: string) =>
+    list.filter((val) => val.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <div className="login-container-wrapper">
       <div className="login-content">
-        <h1 className="app-title" style={{ textAlign: 'center', width: '100%' }}>
-          BabyNest
-        </h1>
-
+        <h1 className="app-title" style={{ textAlign: 'center' }}>BabyNest</h1>
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group email-with-dropdown">
-            <label className="form-label">First Name:</label>
-            <div className="input-wrapper" style={{ position: 'relative' }}>
-              <input
-                type="text"
-                name="firstName"
-                className="login-input"
-                placeholder="Enter your first name"
-                value={formData.firstName}
-                onChange={(e) => {
-                  setFormData({ ...formData, firstName: e.target.value });
-                  setShowFirstNameDropdown(true);
-                }}
-                onFocus={() => setShowFirstNameDropdown(true)}
-                onBlur={() => setTimeout(() => setShowFirstNameDropdown(false), 100)}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck={false}
-                required
-              />
-              {showFirstNameDropdown &&
-                formData.firstName.length > 0 &&
-                recentFirstNames.length > 0 && (
-                  <ul className="signup-email-dropdown">
-                    {recentFirstNames
-                      .filter((val) =>
-                        val.toLowerCase().includes(formData.firstName.toLowerCase())
-                      )
-                      .map((name) => (
-                        <li key={name}>
-                          <span
-                            onClick={() => {
-                              setFormData({ ...formData, firstName: name });
-                              setShowFirstNameDropdown(false);
-                            }}
-                          >
-                            {name}
-                          </span>
-                          <button
-                            type="button"
-                            className="signup-email-delete-icon"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteFirstName(name);
-                            }}
-                          >
-                            ×
-                          </button>
-                        </li>
-                      ))}
-                  </ul>
-              )}
-            </div>
+
+          {/* First Name */}
+          <div className="form-group" style={{ position: 'relative' }}>
+            <label className="form-label">First Name</label>
+            <input
+              type="text"
+              className="login-input"
+              value={formData.firstName}
+              onChange={(e) => handleInputChange('firstName', e.target.value)}
+              onFocus={() => setShowDropdowns((prev) => ({ ...prev, firstName: true }))}
+              onBlur={() => setTimeout(() => setShowDropdowns((prev) => ({ ...prev, firstName: false })), 100)}
+              placeholder="Enter your first name"
+              autoComplete="off"
+              required
+            />
+            {showDropdowns.firstName && formData.firstName && (
+              <ul className="custom-email-dropdown">
+                {filterSuggestions(recentFirstNames, formData.firstName).map((name) => (
+                  <li key={name} onMouseDown={() => handleDropdownSelect('firstName', name)}>
+                    <span>{name}</span>
+                    <button
+                      type="button"
+                      className="email-delete-icon"
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        deleteFirstName(name);
+                      }}
+                    >×</button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-          <div className="form-group email-with-dropdown">
-            <label className="form-label">Last Name:</label>
-            <div className="input-wrapper" style={{ position: 'relative' }}>
-              <input
-                type="text"
-                name="lastName"
-                className="login-input"
-                placeholder="Enter your last name"
-                value={formData.lastName}
-                onChange={(e) => {
-                  setFormData({ ...formData, lastName: e.target.value });
-                  setShowLastNameDropdown(true);
-                }}
-                onFocus={() => setShowLastNameDropdown(true)}
-                onBlur={() => setTimeout(() => setShowLastNameDropdown(false), 100)}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck={false}
-                required
-              />
-              {showLastNameDropdown &&
-                formData.lastName.length > 0 &&
-                recentLastNames.length > 0 && (
-                  <ul className="signup-email-dropdown">
-                    {recentLastNames
-                      .filter((val) =>
-                        val.toLowerCase().includes(formData.lastName.toLowerCase())
-                      )
-                      .map((name) => (
-                        <li key={name}>
-                          <span
-                            onClick={() => {
-                              setFormData({ ...formData, lastName: name });
-                              setShowLastNameDropdown(false);
-                            }}
-                          >
-                            {name}
-                          </span>
-                          <button
-                            type="button"
-                            className="signup-email-delete-icon"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteLastName(name);
-                            }}
-                          >
-                            ×
-                          </button>
-                        </li>
-                      ))}
-                  </ul>
-              )}
-            </div>
+          {/* Last Name */}
+          <div className="form-group" style={{ position: 'relative' }}>
+            <label className="form-label">Last Name</label>
+            <input
+              type="text"
+              className="login-input"
+              value={formData.lastName}
+              onChange={(e) => handleInputChange('lastName', e.target.value)}
+              onFocus={() => setShowDropdowns((prev) => ({ ...prev, lastName: true }))}
+              onBlur={() => setTimeout(() => setShowDropdowns((prev) => ({ ...prev, lastName: false })), 100)}
+              placeholder="Enter your last name"
+              autoComplete="off"
+              required
+            />
+            {showDropdowns.lastName && formData.lastName && (
+              <ul className="custom-email-dropdown">
+                {filterSuggestions(recentLastNames, formData.lastName).map((name) => (
+                  <li key={name} onMouseDown={() => handleDropdownSelect('lastName', name)}>
+                    <span>{name}</span>
+                    <button
+                      type="button"
+                      className="email-delete-icon"
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        deleteLastName(name);
+                      }}
+                    >×</button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-          <div className="form-group email-with-dropdown">
-            <label className="form-label">Email:</label>
-            <div className="input-wrapper" style={{ position: 'relative' }}>
-              <input
-                type="email"
-                name="email"
-                className="login-input"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={(e) => {
-                  setFormData({ ...formData, email: e.target.value });
-                  setShowEmailDropdown(true);
-                }}
-                onFocus={() => setShowEmailDropdown(true)}
-                onBlur={() => setTimeout(() => setShowEmailDropdown(false), 100)}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                required
-              />
-              {showEmailDropdown &&
-                formData.email.length > 0 &&
-                recentEmails.length > 0 && (
-                  <ul className="signup-email-dropdown">
-                    {recentEmails
-                      .filter((e) =>
-                        e.toLowerCase().includes(formData.email.toLowerCase())
-                      )
-                      .map((email) => (
-                        <li key={email}>
-                          <span
-                            onClick={() => {
-                              setFormData({ ...formData, email });
-                              setShowEmailDropdown(false);
-                            }}
-                          >
-                            {email}
-                          </span>
-                          <button
-                            type="button"
-                            className="signup-email-delete-icon"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteEmail(email);
-                            }}
-                          >
-                            ×
-                          </button>
-                        </li>
-                      ))}
-                  </ul>
-              )}
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Confirm Email:</label>
+          {/* Email */}
+          <div className="form-group" style={{ position: 'relative' }}>
+            <label className="form-label">Email</label>
             <input
               type="email"
-              name="confirmEmail"
               className="login-input"
-              placeholder="Confirm your email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              onFocus={() => setShowDropdowns((prev) => ({ ...prev, email: true }))}
+              onBlur={() => setTimeout(() => setShowDropdowns((prev) => ({ ...prev, email: false })), 100)}
+              placeholder="Enter your email"
+              autoComplete="off"
+              required
+            />
+            {showDropdowns.email && formData.email && (
+              <ul className="custom-email-dropdown">
+                {filterSuggestions(recentEmails, formData.email).map((email) => (
+                  <li key={email} onMouseDown={() => handleDropdownSelect('email', email)}>
+                    <span>{email}</span>
+                    <button
+                      type="button"
+                      className="email-delete-icon"
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        deleteEmail(email);
+                      }}
+                    >×</button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Confirm Email */}
+          <div className="form-group">
+            <label className="form-label">Confirm Email</label>
+            <input
+              type="email"
+              className="login-input"
               value={formData.confirmEmail}
-              onChange={handleChange}
-              autoComplete="new-email"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
+              onChange={(e) => handleInputChange('confirmEmail', e.target.value)}
+              placeholder="Confirm your email"
+              autoComplete="off"
               required
             />
           </div>
 
+          {/* Password */}
           <div className="form-group">
-            <label className="form-label">Password:</label>
-            <div className="input-wrapper">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                className="login-input"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="login-input"
+              value={formData.password}
+              onChange={(e) => handleInputChange('password', e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
           </div>
 
+          {/* Confirm Password */}
           <div className="form-group">
-            <label className="form-label">Confirm Password:</label>
-            <div className="input-wrapper">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                className="login-input"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
-                }
-              >
-                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
+            <label className="form-label">Confirm Password</label>
+            <input
+              type="password"
+              className="login-input"
+              value={formData.confirmPassword}
+              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+              placeholder="Confirm your password"
+              required
+            />
           </div>
 
           <button type="submit" className="login-button">Sign Up</button>
-
-          <div className="signup-section">
-            <p className="signup-text">
-              Already have an account?{' '}
-              <Link className="signup-link" to="/">Login</Link>
-            </p>
-          </div>
         </form>
       </div>
     </div>

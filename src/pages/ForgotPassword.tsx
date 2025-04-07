@@ -1,74 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import useRecentValues from '../hooks/useRecentValues'; // ✅ Corrected this line
-
-import '../styles/Login.css';
+import { useNavigate } from 'react-router-dom';
+import useRecentValues from '../hooks/useRecentValues';
+import '../styles/Login.css'; // Reuse existing styles
 
 const ForgotPassword: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isSent, setIsSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
-  const navigate = useNavigate();
+  const [isSending, setIsSending] = useState(false);
 
-  // ✅ use custom hook
   const {
     values: recentEmails,
-    addValue: addEmail,
-    deleteValue: deleteEmail
+    addValue,
+    deleteValue,
   } = useRecentValues('recentEmails');
 
-  // Countdown logic
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [countdown]);
-
-  const handleReset = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    if (!isValid) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+    if (!email.trim()) return;
 
-    const code = Math.floor(100000 + Math.random() * 900000);
+    setIsSending(true);
+    addValue(email);
 
-    // ✅ Save email
-    addEmail(email.trim());
-
-    // ✅ Simulate email send with code
-    alert(`A reset code has been sent to ${email}.\n\nUse this code: ${code} to reset your password.`);
-
-    setIsSent(true);
-    setCountdown(30);
-
-    // ✅ Navigate after delay
     setTimeout(() => {
+      setIsSending(false);
+      setCountdown(30);
+      alert('✅ A reset code has been sent to your email.\n\nCode: 123456');
+
+      // Simulate redirect after clicking "OK"
       navigate('/reset-password');
-    }, 3000);
+    }, 1000);
   };
 
-  // ✅ Filter dropdown based on input
-  const filteredEmails = recentEmails.filter((e) =>
-    e.toLowerCase().includes(email.toLowerCase())
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
+  const filteredEmails = recentEmails.filter((val) =>
+    val.toLowerCase().includes(email.toLowerCase())
   );
 
   return (
     <div className="login-container-wrapper">
       <div className="login-content">
-        <h2 className="form-title" style={{ fontSize: '1.8rem', fontWeight: 700 }}>
-          Forgot Password
-        </h2>
-        <form onSubmit={handleReset} className="login-form">
+        <h2 className="form-title">Forgot Password</h2>
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group" style={{ position: 'relative' }}>
-            <label htmlFor="email" className="form-label" style={{ fontSize: '1rem' }}>
-              Enter your registered email:
-            </label>
+            <label htmlFor="email" className="form-label">Email Address</label>
             <div className="input-wrapper">
               <input
                 type="email"
@@ -81,29 +64,30 @@ const ForgotPassword: React.FC = () => {
                   setShowDropdown(true);
                 }}
                 onFocus={() => setShowDropdown(true)}
-                onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                 autoComplete="off"
                 required
               />
-
-              {/* ✅ Dropdown */}
               {showDropdown && email.length > 0 && filteredEmails.length > 0 && (
                 <ul className="custom-email-dropdown">
-                  {filteredEmails.map((item, index) => (
-                    <li key={index}>
+                  {filteredEmails.map((item) => (
+                    <li key={item}>
                       <span
                         onClick={() => {
                           setEmail(item);
                           setShowDropdown(false);
-                        }}>
+                        }}
+                      >
                         {item}
                       </span>
                       <button
                         className="email-delete-icon"
-                        onClick={() => deleteEmail(item)}
-                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteValue(item);
+                        }}
                       >
-                        <span className="email-delete-icon">&times;</span>
+                        ×
                       </button>
                     </li>
                   ))}
@@ -112,20 +96,16 @@ const ForgotPassword: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className="login-button" disabled={countdown > 0}>
-            {countdown > 0 ? `Resend in ${countdown}s` : 'Send Reset Link'}
+          <button type="submit" className="login-button" disabled={isSending}>
+            {isSending ? 'Sending...' : 'Send Reset Link'}
           </button>
+
+          {countdown > 0 && (
+            <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' }}>
+              Resend in {countdown}s
+            </p>
+          )}
         </form>
-
-        {isSent && (
-          <p style={{ color: 'green', marginTop: '1rem', textAlign: 'center' }}>
-            ✅ Reset link sent!
-          </p>
-        )}
-
-        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
-          <Link to="/" className="signup-link">← Back to Login</Link>
-        </div>
       </div>
     </div>
   );

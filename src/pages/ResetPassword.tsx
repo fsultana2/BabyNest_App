@@ -1,78 +1,81 @@
 import React, { useState } from 'react';
-import '../styles/Login.css';
-import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
+import '../styles/Login.css'; // Reuse the login styles
 
 const ResetPassword: React.FC = () => {
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false); // 👈 new toggle
   const navigate = useNavigate();
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleReset = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirm) {
-      alert("Passwords don't match!");
+
+    if (newPassword !== confirmPassword) {
+      alert('❌ Passwords do not match!');
       return;
     }
-    alert('✅ Password reset successful!');
-    navigate('/');
+
+    // Simulate reset logic
+    alert('✅ Password has been reset successfully!');
+    setTimeout(() => {
+      navigate('/'); // Redirect to login
+    }, 1000);
   };
 
   return (
     <div className="login-container-wrapper">
       <div className="login-content">
-        <h2 className="form-title" style={{ fontSize: '1.8rem', fontWeight: 700 }}>
-          Reset Password
-        </h2>
+        <h1 className="app-title">Reset Password</h1>
 
-        <form onSubmit={handleSubmit} className="login-form">
-          {/* New Password */}
+        <form onSubmit={handleReset} className="login-form">
           <div className="form-group">
             <label className="form-label">New Password</label>
             <div className="input-wrapper">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showNewPassword ? 'text' : 'password'}
                 className="login-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
                 className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowNewPassword(!showNewPassword)}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div className="form-group">
             <label className="form-label">Confirm Password</label>
             <div className="input-wrapper">
               <input
-                type={showConfirm ? 'text' : 'password'} // 👈 toggle visibility
+                type={showConfirmPassword ? 'text' : 'password'}
                 className="login-input"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                placeholder="Confirm password"
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
                 className="password-toggle"
-                onClick={() => setShowConfirm(!showConfirm)}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
-          <button type="submit" className="login-button">Submit</button>
+          <button type="submit" className="login-button">
+            Reset Password
+          </button>
         </form>
       </div>
     </div>

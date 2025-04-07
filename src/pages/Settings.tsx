@@ -1,172 +1,128 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CustomSelect from '../components/ui/select';
+import CustomSelect from '../components/ui/CustomSelect'; 
 import '../styles/Settings.css';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
+
+const fontSizes = ['Small', 'Medium', 'Large'];
+const relations = ['Mom', 'Dad', 'Grandparent', 'Guardian', 'Other'];
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
 
-  const [fontSize, setFontSize] = useState('medium');
+  // Font size dropdown
+  const [fontSize, setFontSize] = useState(localStorage.getItem('fontSize') || 'Medium');
+
+  // Baby relation dropdown
   const [relation, setRelation] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [updateMessage, setUpdateMessage] = useState('');
 
-  const fontSizeOptions = [
-    { value: 'small', label: 'Small' },
-    { value: 'medium', label: 'Medium (default)' },
-    { value: 'large', label: 'Large' },
-  ];
+  // Password form
+  const [current, setCurrent] = useState('');
+  const [newPass, setNewPass] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [visible, setVisible] = useState({
+    current: false,
+    newPass: false,
+    confirm: false,
+  });
 
-  const relationOptions = [
-    { value: 'Mother', label: 'Mother' },
-    { value: 'Father', label: 'Father' },
-    { value: 'Sibling', label: 'Sibling' },
-    { value: 'Tutor', label: 'Tutor' },
-    { value: 'Caregiver', label: 'Caregiver' },
-    { value: 'Relatives', label: 'Relatives' },
-  ];
+  const [success, setSuccess] = useState(false);
 
+  // Persist font size to body
   useEffect(() => {
-    const savedSize = localStorage.getItem('fontSize') || 'medium';
-    setFontSize(savedSize);
-    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
-    document.body.classList.add(`font-size-${savedSize}`);
-  }, []);
+    document.body.style.fontSize =
+      fontSize === 'Small' ? '14px' : fontSize === 'Large' ? '18px' : '16px';
+    localStorage.setItem('fontSize', fontSize);
+  }, [fontSize]);
 
-  const handleFontSizeChange = (option: any) => {
-    setFontSize(option.value);
-    localStorage.setItem('fontSize', option.value);
-    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
-    document.body.classList.add(`font-size-${option.value}`);
-  };
-
-  const handleRelationChange = (option: any) => {
-    setRelation(option.value);
-  };
-
-  const handlePasswordUpdate = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      alert('❌ Passwords do not match.');
-      return;
-    }
+    // simulate password update
+    setSuccess(true);
+    setCurrent('');
+    setNewPass('');
+    setConfirm('');
 
-    // Simulate password update logic
-    setUpdateMessage('✅ Password updated successfully!');
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    setTimeout(() => setUpdateMessage(''), 3000);
+    setTimeout(() => setSuccess(false), 3000);
   };
 
   return (
     <div className="settings-page">
+      {/* Back Button */}
       <button className="back-button" onClick={() => navigate('/dashboard')}>
-        ← Back to Dashboard
+        <ArrowLeft size={20} />
+        Back
       </button>
 
       <h2 className="settings-title">Settings</h2>
 
-      <section className="settings-section">
-        <h3>Font Size</h3>
+      {/* Font Size Selector */}
+      <div className="setting-section">
+        <label>Font Size</label>
         <CustomSelect
-          className="font-size-select"
-          value={fontSizeOptions.find(opt => opt.value === fontSize)!}
-          onChange={handleFontSizeChange}
-          options={fontSizeOptions}
+          options={fontSizes}
+          selected={fontSize}
+          onSelect={setFontSize}
+          className="font-select"
         />
-      </section>
+      </div>
 
-      <section className="settings-section">
-        <h3>Relation with Baby</h3>
+      {/* Relation Selector */}
+      <div className="setting-section">
+        <label>Relation with Baby</label>
         <CustomSelect
+          options={relations}
+          selected={relation}
+          onSelect={setRelation}
           className="relation-select"
-          value={relationOptions.find(opt => opt.value === relation) || relationOptions[0]}
-          onChange={handleRelationChange}
-          options={relationOptions}
         />
-      </section>
+      </div>
 
-      <section className="settings-section">
-        <h3>Update Password</h3>
-        <form onSubmit={handlePasswordUpdate} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div className="input-wrapper">
-            <input
-              type={showCurrent ? 'text' : 'password'}
-              className="password-input"
-              placeholder="Current Password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowCurrent(!showCurrent)}
-              tabIndex={-1}
-            >
-              {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
+      {/* Password Update */}
+      
+      <form onSubmit={handleSubmit} className="password-section">
+        <label>Current Password</label>
+        <div className="password-input">
+          <input
+            type={visible.current ? 'text' : 'password'}
+            value={current}
+            onChange={(e) => setCurrent(e.target.value)}
+            required
+          />
+          <span onClick={() => setVisible({ ...visible, current: !visible.current })}>
+            {visible.current ? <EyeOff size={18} /> : <Eye size={18} />}
+          </span>
+        </div>
 
-          <div className="input-wrapper">
-            <input
-              type={showNew ? 'text' : 'password'}
-              className="password-input"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowNew(!showNew)}
-              tabIndex={-1}
-            >
-              {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
+        <label>New Password</label>
+        <div className="password-input">
+          <input
+            type={visible.newPass ? 'text' : 'password'}
+            value={newPass}
+            onChange={(e) => setNewPass(e.target.value)}
+            required
+          />
+          <span onClick={() => setVisible({ ...visible, newPass: !visible.newPass })}>
+            {visible.newPass ? <EyeOff size={18} /> : <Eye size={18} />}
+          </span>
+        </div>
 
-          <div className="input-wrapper">
-            <input
-              type={showConfirm ? 'text' : 'password'}
-              className="password-input"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowConfirm(!showConfirm)}
-              tabIndex={-1}
-            >
-              {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
+        <label>Confirm Password</label>
+        <div className="password-input">
+          <input
+            type={visible.confirm ? 'text' : 'password'}
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+          />
+          <span onClick={() => setVisible({ ...visible, confirm: !visible.confirm })}>
+            {visible.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
+          </span>
+        </div>
 
-          <button type="submit" className="login-button" style={{ width: '60%', marginTop: '1rem' }}>
-            Update Password
-          </button>
-
-          {updateMessage && (
-            <p style={{ color: '#4caf50', marginTop: '1rem' }}>{updateMessage}</p>
-          )}
-        </form>
-      </section>
-
-      <section className="settings-section">
-        <h3>Subscription</h3>
-        <p>Coming soon...</p>
-      </section>
+        <button type="submit" className="submit-button">Update Password</button>
+        {success && <p className="success-msg">✅ Password updated successfully!</p>}
+      </form>
     </div>
   );
 };
