@@ -10,13 +10,9 @@ const relations = ['Mom', 'Dad', 'Grandparent', 'Guardian', 'Other'];
 const Settings: React.FC = () => {
   const navigate = useNavigate();
 
-  // Font size dropdown
   const [fontSize, setFontSize] = useState(localStorage.getItem('fontSize') || 'Medium');
-
-  // Baby relation dropdown
   const [relation, setRelation] = useState('');
 
-  // Password form
   const [current, setCurrent] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -28,7 +24,6 @@ const Settings: React.FC = () => {
 
   const [success, setSuccess] = useState(false);
 
-  // Persist font size to body
   useEffect(() => {
     document.body.style.fontSize =
       fontSize === 'Small' ? '14px' : fontSize === 'Large' ? '18px' : '16px';
@@ -37,18 +32,15 @@ const Settings: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // simulate password update
     setSuccess(true);
     setCurrent('');
     setNewPass('');
     setConfirm('');
-
     setTimeout(() => setSuccess(false), 3000);
   };
 
   return (
     <div className="settings-page">
-      {/* Back Button */}
       <button className="back-button" onClick={() => navigate('/dashboard')}>
         <ArrowLeft size={20} />
         Back
@@ -79,7 +71,6 @@ const Settings: React.FC = () => {
       </div>
 
       {/* Password Update */}
-      
       <form onSubmit={handleSubmit} className="password-section">
         <label>Current Password</label>
         <div className="password-input">

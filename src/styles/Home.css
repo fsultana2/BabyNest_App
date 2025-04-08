@@ -36,28 +36,30 @@
 .toggle-bar {
   display: flex;
   justify-content: center;
-  background: #f8f8f8;
-  border-radius: 20px;
+  background: #f1f1f1;
+  border-radius: 999px;
+  padding: 4px;
   overflow: hidden;
   margin: 1rem auto;
   max-width: 350px;
 }
 .toggle-button {
   flex: 1;
-  padding: 0.6rem;
   text-align: center;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #333;
-  transition: background 0.3s;
-  background: transparent;
+  padding: 0.6rem 1.2rem;
   border: none;
+  background: transparent;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 999px;
 }
 .toggle-button.active {
-  background-color: #fff;
-  color: #000;
-  border-radius: 20px;
+  background-color: #e0e0e0; /* ✅ subtle gray */
+  font-weight: 700;           /* ✅ heavier */
+  color: #000;                /* ✅ bolder look */
 }
 
 /* Child Selector */
