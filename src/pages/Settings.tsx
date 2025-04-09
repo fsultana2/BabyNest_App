@@ -26,7 +26,7 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     document.body.style.fontSize =
-      fontSize === 'Small' ? '14px' : fontSize === 'Large' ? '18px' : '16px';
+      fontSize === 'Small' ? '14px' : fontSize === 'Large' ? '22px' : '18px';
     localStorage.setItem('fontSize', fontSize);
   }, [fontSize]);
 

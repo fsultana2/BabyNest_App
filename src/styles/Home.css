@@ -1,9 +1,10 @@
-/* Home Page Wrapper */
+/* Home.css */
+
 .home-page {
   min-height: 100vh;
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #f1c254, #f1a9d1, #eef0c2, #0969d0);
+  background: linear-gradient(135deg, #faf0da, #f3e5f6, #d7f6e0, #deecfa);
   background-size: 300% 300%;
   animation: gradient-flow 15s ease infinite;
   box-sizing: border-box;
@@ -14,79 +15,72 @@
   align-items: center;
   z-index: 1;
   position: relative;
+  overflow-x: hidden;
 }
 
-/* ✅ Fixed Animation */
 @keyframes gradient-flow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Page Title */
-.home-title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-/* Toggle Bar (Dashboard / Child Profiles) */
 .toggle-bar {
   display: flex;
   justify-content: center;
-  background: #f1f1f1;
-  border-radius: 999px;
-  padding: 4px;
+  background: #f8f8f8;
+  border-radius: 20px;
   overflow: hidden;
-  margin: 1rem auto;
   max-width: 350px;
-}
-.toggle-button {
-  flex: 1;
-  text-align: center;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  background: transparent;
-  color: #555;
-  font-weight: 500;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 999px;
-}
-.toggle-button.active {
-  background-color: #e0e0e0; /* ✅ subtle gray */
-  font-weight: 700;           /* ✅ heavier */
-  color: #000;                /* ✅ bolder look */
+  width: 100%;
 }
 
-/* Child Selector */
+.toggle-button {
+  flex: 1;
+  padding: 0.6rem;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  transition: background 0.3s;
+  background: transparent;
+  border: none;
+}
+
+.toggle-button.active {
+  background-color: #fff;
+  color: #000;
+  border-radius: 20px;
+}
+
 .child-selector {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  margin: 1rem 0;
   flex-wrap: wrap;
-}
-.child-dropdown {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border-radius: 12px;
-  padding: 0.4rem 0.8rem;
-  gap: 6px;
-  cursor: pointer;
+  width: 100%;
+  max-width: 420px;
 }
 
-/* Upload Avatar */
+.child-dropdown-select {
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 1rem;
+  font-family: inherit;
+  max-width: 240px;
+  width: 100%;
+}
+
 .upload-section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
+
 .upload-circle {
   width: 60px;
   height: 60px;
@@ -97,20 +91,16 @@
   align-items: center;
   margin-bottom: 0.5rem;
 }
+
 .upload-button {
-  padding: 0.4rem 1.2rem;
+  padding: 0.4rem 1rem;
   border-radius: 999px;
   border: none;
   background: #ffffff;
-  color: #333; /* ✅ make sure text is visible */
   font-weight: 600;
-  font-size: 1rem; /* ✅ readable */
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease;
 }
 
-/* Activity Cards */
 .activity-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -118,6 +108,7 @@
   width: 100%;
   max-width: 400px;
 }
+
 .activity-card {
   background: #ffffff;
   padding: 1rem;
@@ -130,22 +121,24 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* Summary Section */
 .summary-section {
   width: 100%;
   max-width: 400px;
 }
+
 .summary-title {
   text-align: center;
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.6rem;
 }
+
 .summary-card {
   background: #ffffff;
   padding: 0.8rem;
@@ -154,7 +147,6 @@
   font-size: 0.9rem;
 }
 
-/* Bottom Navigation */
 .bottom-nav {
   display: flex;
   justify-content: space-around;
@@ -165,6 +157,7 @@
   border-radius: 20px;
   backdrop-filter: blur(8px);
 }
+
 .bottom-icon {
   display: flex;
   flex-direction: column;
@@ -173,10 +166,46 @@
   color: #333;
 }
 
-/* Footer */
 .home-footer {
   margin-top: 1rem;
   font-size: 0.8rem;
   color: #444;
   text-align: center;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 480px) {
+  .home-page {
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+
+  .child-selector {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .child-dropdown-select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .activity-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .bottom-icon span {
+    font-size: 0.8rem;
+  }
 }

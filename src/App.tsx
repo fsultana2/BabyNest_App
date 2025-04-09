@@ -7,6 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import ChildProfiles from './pages/ChildProfiles';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/child-profiles" element={<ChildProfiles />} /> 
     </Routes>
   );
 }
