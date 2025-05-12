@@ -23,8 +23,15 @@ const Header: React.FC<HeaderProps> = ({ name, email }) => {
     .join('')
     .toUpperCase();
 
-  const handleSignOut = () => {
+  {/*const handleSignOut = () => {
     localStorage.clear();
+    navigate('/');
+  };*/}
+  const handleSignOut = () => {
+    // Remove only session-related data
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('selectedChild'); 
     navigate('/');
   };
 

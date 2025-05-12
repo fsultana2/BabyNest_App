@@ -8,10 +8,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "baseUrl": ".",                       // ✅ Add this line
+    "baseUrl": ".",                        // Ensure this is present
     "paths": {
-      "@/*": ["src/*"]                   // ✅ Add this block
+      "@/*": ["src/*"]                      // Ensure this is set correctly for path aliasing
     }
   },
-  "include": ["src"]
+  "include": ["src"]                         // Make sure the entire `src` folder is included
 }

@@ -1,0 +1,391 @@
+/* Apply gradient background */
+body {
+    background: linear-gradient(135deg, #faf0da, #f3e5f6, #d7f6e0, #deecfa);
+    font-family: Arial, sans-serif; 
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Center Dashboard and Child Profiles buttons */
+  nav {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  nav button {
+    margin: 0 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    border: 2px solid #000;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  nav button:hover {
+    background-color: #f3e5f6;
+  }
+ 
+  /* Form buttons (Formula, Breast, Solids) */
+  button {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    margin: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #f3e5f6;
+  }
+  
+  button:active {
+    background-color: #d7f6e0;
+  }
+  
+  /* Center the entire Feeding Tracker container */
+  .feeding-tracker {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  
+  }
+  /* Center the heading "Feeding Tracker" */
+.feeding-tracker h3 {
+    font-size: 30px; /* Larger font size for the main title */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Center the "Formula Feeding" title */
+  .feeding-form h4 {
+    font-size: 24px; /* Slightly smaller font for the section title */
+    font-weight: normal;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  /* Feeding type buttons (Formula, Breast, Solids) */
+  .feeding-type-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .feeding-type-selector button.active {
+    background-color: #f3e5f6;
+    color: #000;
+    border: 2px solid #000;
+  }
+  
+  
+  .feeding-type-selector button:hover {
+    background-color: #acbcec;
+  }
+  
+  
+  
+  /* Formula feeding layout */
+  .feeding-form {
+ display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #ffffff; /* White background for the form */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  width: 100%;
+  max-width: 500px; /* Maximum width of the form */
+  
+  box-sizing: border-box; /* Ensure padding does not affect width */
+  }
+
+  
+  /* Flexbox for Amount and Time */
+  .amount-wrapper, .time-wrapper {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .amount-wrapper label, .time-wrapper label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .amount-input-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .amount-input-wrapper input {
+    padding: 10px;
+    width: 80px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+  }
+  
+  .amount-wrapper .oz-text {
+    font-size: 16px;
+  }
+  
+  .amount-wrapper .amount-controls {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .amount-wrapper button {
+    padding: 5px 10px;
+    font-size: 16px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
+  }
+  
+  .time-wrapper input[type="time"] {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    text-align: center;
+    width: 150px;
+  }
+  
+  
+  /* Add Button */
+  .add-button {
+    background: linear-gradient(135deg, #f3b333, #f7c8f5);
+    color: white;
+    font-weight: bold;
+    padding: 15px 25px;
+    border-radius: 50px;
+    font-size: 16px;
+    width: 60%; /* Make the button smaller */
+    margin-top: 15px; /* Add space above the button */
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .add-button:hover {
+    background-color: #360847;
+  }
+  
+  .add-button:active {
+    background-color: #b2c3e2;
+  }
+  
+  /* Summary section styling */
+  #formula-feeding-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  #formula-feeding-summary p {
+    margin: 5px 0;
+  }
+  
+  #formula-feeding-summary .total {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .summary-entry {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .summary-entry button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ff5555;
+    font-size: 18px;
+    transition: color 0.3s;
+  }
+  
+  .summary-entry button:hover {
+    color: #ff3333;
+  }
+  
+  .delete-all-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    background-color: #ffcccc;
+    color: #ff3333;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+    width: 100%;  /* Ensure it stretches to take full width */
+    max-width: 400px; /* Optional: limit max width for the button */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+  }
+  
+  .delete-all-btn:hover {
+    background-color: #f7a7a7;
+  }
+  
+  
+  /* Time input for start time */
+  .start-time {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .start-time input {
+    padding: 10px;
+    width: 150px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .start-time button {
+    background-color: transparent;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .start-time button:hover {
+    background-color: #f7c8f5;
+  }
+  
+  .start-time button:active {
+    background-color: #d7f6e0;
+  }
+  
+  /* General button styles for feeding-type-selector */
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    border-radius: 25px;
+    border: 2px solid #000;
+    cursor: pointer;
+    margin: 5px; /* Reduced margin for better alignment */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* General button hover and active states */
+  button:hover {
+    background-color: #f3e5f6;
+  }
+  
+  button:active {
+    background-color: #d7f6e0;
+  }
+  
+  button[style*="background-color: #f3e5f6"] {
+    background-color: #f3e5f6;
+    color: #000;
+  }
+  
+  button[style*="background-color: #f3e5f6"]:hover {
+    background-color: #f3e5f6;
+  }
+  
+
+  /*breastfeed*/
+  /* Stopwatch Start/Stop Buttons */
+.start-time-button,
+.stop-time-button {
+  padding: 10px 20px;
+  font-size: 15px;
+  border-radius: 25px;
+  font-weight: bold;
+  border: none;
+  color: white;
+  margin-top: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.start-time-button {
+  background: linear-gradient(to right, #a6b2f2, #c6d3fa);
+}
+
+.stop-time-button {
+  background: linear-gradient(to right, #fda085, #f6b1c3);
+}
+
+.start-time-button:hover,
+.stop-time-button:hover {
+  opacity: 0.9;
+}
+
+/* Stopwatch live timer display */
+.timer-display {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Start time display (below the stopwatch) */
+.start-time-display {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Breastfeeding summary text */
+.feeding-form .summary p {
+  font-size: 15px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+/* Breastfeeding delete button */
+.feeding-form .summary button.delete-entry-button {
+  background-color: #1e1e1e;
+  color: #ff4444;
+  padding: 5px 12px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feeding-form .summary button.delete-entry-button:hover {
+  background-color: #000;
+  color: #ff2222;
+}

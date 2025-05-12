@@ -1,8 +1,7 @@
-// src/pages/SignUp.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useRecentValues from '../hooks/useRecentValues';
-import '../styles/Login.css';
+import '../styles/Login.css'; // Uses same styling as Login
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -50,6 +49,9 @@ const SignUp: React.FC = () => {
     setShowDropdowns((prev) => ({ ...prev, [field]: false }));
   };
 
+  const filterSuggestions = (list: string[], query: string) =>
+    list.filter((val) => val.toLowerCase().includes(query.toLowerCase()));
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const fullName = `${formData.firstName} ${formData.lastName}`;
@@ -64,15 +66,12 @@ const SignUp: React.FC = () => {
     navigate('/');
   };
 
-  const filterSuggestions = (list: string[], query: string) =>
-    list.filter((val) => val.toLowerCase().includes(query.toLowerCase()));
-
   return (
     <div className="login-container-wrapper">
       <div className="login-content">
         <h1 className="app-title" style={{ textAlign: 'center' }}>BabyNest</h1>
-        <form onSubmit={handleSubmit} className="login-form">
 
+        <form onSubmit={handleSubmit} className="login-form" autoComplete="off">
           {/* First Name */}
           <div className="form-group" style={{ position: 'relative' }}>
             <label className="form-label">First Name</label>
@@ -195,6 +194,7 @@ const SignUp: React.FC = () => {
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
               placeholder="Enter your password"
+              autoComplete="new-password"
               required
             />
           </div>
@@ -208,6 +208,7 @@ const SignUp: React.FC = () => {
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               placeholder="Confirm your password"
+              autoComplete="new-password"
               required
             />
           </div>

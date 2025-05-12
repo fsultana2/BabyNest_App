@@ -24,89 +24,155 @@
   100% { background-position: 0% 50%; }
 }
 
-.toggle-bar {
-  display: flex;
-  justify-content: center;
-  background: #f8f8f8;
-  border-radius: 20px;
-  overflow: hidden;
-  max-width: 350px;
-  width: 100%;
-}
-
-.toggle-button {
-  flex: 1;
-  padding: 0.6rem;
-  text-align: center;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #333;
-  transition: background 0.3s;
-  background: transparent;
-  border: none;
-}
-
-.toggle-button.active {
-  background-color: #fff;
-  color: #000;
-  border-radius: 20px;
-}
 
 .child-selector {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  justify-content: flex-start;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  width: 100%;
-  max-width: 420px;
+  position: relative;
 }
 
-.child-dropdown-select {
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #fff;
+/* Label for the child dropdown */
+.child-label {
+  font-weight: 500;
   font-size: 1rem;
-  font-family: inherit;
-  max-width: 240px;
-  width: 100%;
+  margin-right: 10px;  /* Add some space between label and dropdown */
 }
 
+/* Dropdown Container */
+.child-dropdown {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  font-weight: 500;
+  width: 100px; /* Adjust width to your preference */
+  cursor: pointer;
+  position: relative;
+}
+
+
+/* Dropdown list */
+.child-dropdown-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+   /* Ensure full width of dropdown list */
+  width: 100px;
+  margin-top: 0.2rem;
+  padding: 1rem;
+ 
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  z-index: 9999;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.child-dropdown-list.visible {
+  display: block;
+}
+.child-dropdown.active {
+  border-color: #007bff;
+}
+
+/* Show dropdown when the dropdown is active */
+.child-dropdown.active .child-dropdown-list {
+  display: block; /* Show dropdown when active */
+}
+
+/* Style for individual dropdown items */
+.child-dropdown-list div {
+  padding: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.child-dropdown-list div:hover {
+  background-color: #f1f1f1;
+}
+
+.child-dropdown-list .selected {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+
+.checkmark {
+  font-size: 16px;
+  color: green;
+}
+
+/* Avatar Upload Section Styling */
 .upload-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .upload-circle {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: #ffffffaa;
+  background: #f3e5f6;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  border: 2px solid #fff;
+  overflow: hidden;  /* This ensures that the image stays inside the circle */
+}
+
+.upload-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* This ensures the image fills the circle while maintaining aspect ratio */
 }
 
 .upload-button {
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  border: none;
-  background: #ffffff;
+  background: linear-gradient(135deg, #FF74A4, #FFB74D);
+  color: #fff;
   font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1.2rem;
   cursor: pointer;
+  transition: transform 0.2s ease;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 180px;
+  text-align: center;
 }
 
+.upload-button:hover {
+  transform: scale(1.05);
+}
+
+.upload-button:focus {
+  outline: 3px solid #FF74A4;
+}
+
+.upload-button:active {
+  transform: scale(0.95);
+}
+
+/* Activity Grid for Today’s Summary Section */
 .activity-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 1000px;
+  margin-top: 1rem;
 }
 
 .activity-card {
@@ -121,30 +187,37 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+/* Summary Section Styling */
 .summary-section {
   width: 100%;
-  max-width: 400px;
+  max-width: 800px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin: 1.5rem 0;
 }
 
 .summary-title {
-  text-align: center;
+  text-align: center;  /* Center the title text */
   font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.6rem;
+  grid-template-columns: repeat(2, 1fr); /* Two columns layout for large screens */
+  gap: 1rem;
 }
 
 .summary-card {
-  background: #ffffff;
-  padding: 0.8rem;
-  border-radius: 12px;
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 8px;
   text-align: center;
   font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .bottom-nav {
@@ -152,18 +225,42 @@
   justify-content: space-around;
   background: #ffffffcc;
   width: 100%;
-  max-width: 420px;
-  padding: 0.8rem;
+  max-width: 500px;
+  padding: 1rem;
   border-radius: 20px;
   backdrop-filter: blur(8px);
+  margin-top: 1rem;
 }
 
+/* Styling for Each Bottom Icon Box */
 .bottom-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 0.75rem;
+  font-size: 1rem;
   color: #333;
+  gap: 0.3rem;
+  padding: 1rem; /* Adds padding to the icon box */
+  border-radius: 10px; /* Creates a box around the icon */
+  background-color: #f8f8f8; /* Light background color */
+  width: 100px; /* Fixed width for each icon box */
+  cursor: pointer; /* Makes it clickable like a button */
+  transition: background 0.3s ease, transform 0.3s ease; /* Adds smooth transition */
+}
+
+.bottom-icon:hover {
+  background-color: #d3d3d3; /* Changes the background color on hover */
+  transform: scale(1.05); /* Makes the box slightly bigger on hover */
+}
+
+/* Icon Style */
+.bottom-icon svg {
+  font-size: 1.5rem; /* Adjusts icon size */
+}
+
+.bottom-icon span {
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .home-footer {
@@ -173,6 +270,13 @@
   text-align: center;
 }
 
+/* Ensure that summary cards are displayed as two per row on large screens */
+@media (min-width: 481px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+  }
+}
+
 /* Responsive Enhancements */
 @media (max-width: 480px) {
   .home-page {
@@ -180,32 +284,35 @@
     overflow-x: hidden;
   }
 
-  .child-selector {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .child-dropdown-select {
-    width: 100%;
-    max-width: 100%;
-  }
-
   .activity-grid {
     grid-template-columns: 1fr;
     width: 100%;
   }
 
+  .summary-section {
+    padding: 0.75rem;
+  }
+
   .summary-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* Stack the cards vertically on mobile */
   }
 
+  .summary-card {
+    padding: 0.75rem;
+    font-size: 1rem;
+    box-shadow: none;
+  }
   .bottom-nav {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: row; /* Align in one row for mobile */
+    justify-content: center; /* Center align the icons */
+    gap: 1rem; /* Adds space between icons */
   }
 
-  .bottom-icon span {
-    font-size: 0.8rem;
+  .bottom-icon {
+    width: 100px; /* Makes sure icons have the same width in mobile */
+  }
+
+  .bottom-icon svg {
+    font-size: 1.5rem;
   }
 }

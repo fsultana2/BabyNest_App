@@ -1,40 +1,70 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  ChevronDown,
-  Moon,
-  Baby,
-  Play,
-  Droplet,
-  Book,
-  Music,
-  FileText,
-  Camera,
-} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation for current path
+import { ChevronDown, Camera, Baby, Moon, Play, Droplet } from 'lucide-react';
+import { Music, Book, FileText } from 'lucide-react';
+import useSelectedChild from '../hooks/useSelectedChild';
 import '../styles/Home.css';
+import ChildSelector from '../components/ChildSelector'; 
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [currentTab, setCurrentTab] = useState<'dashboard' | 'profiles'>('dashboard');
-  const [selectedChild, setSelectedChild] = useState('');
+  const location = useLocation(); // Hook to get current location
+
+  const { selectedChild, setChild } = useSelectedChild();  // Using custom hook for selected child
+  const [children, setChildren] = useState<{ name: string; dob: string }[]>([]);  // Store both name and dob
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Load children names and profile image from localStorage
+  useEffect(() => {
+    const savedChildren = JSON.parse(localStorage.getItem('children') || '[]');
+    setChildren(savedChildren);
+
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+  }, []);
+
+  // Handle the image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUrl = reader.result as string;
+        setProfileImage(imageUrl);
+        localStorage.setItem('profileImage', imageUrl);  // Store in localStorage
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  // Handle child selection
+  const handleChildSelect = (child: { name: string }) => {
+    setChild(child.name);  // Select child by name
+    setIsDropdownOpen(false);  // Close dropdown after selecting a child
+  };
 
   return (
     <div className="home-page">
       {/* Toggle Bar */}
       <div className="toggle-bar">
         <button
-          className={`toggle-button ${currentTab === 'dashboard' ? 'active' : ''}`}
+          className={`toggle-button ${location.pathname === '/dashboard' ? 'active' : ''}`}  
           onClick={() => {
-            setCurrentTab('dashboard');
             navigate('/dashboard');
           }}
         >
           Dashboard
         </button>
         <button
-          className={`toggle-button ${currentTab === 'profiles' ? 'active' : ''}`}
+          className={`toggle-button ${location.pathname === '/child-profiles' ? 'active' : ''}`}  
           onClick={() => {
-            setCurrentTab('profiles');
             navigate('/child-profiles');
           }}
         >
@@ -42,26 +72,36 @@ const Home: React.FC = () => {
         </button>
       </div>
 
-      {/* Child Selector */}
-      <div className="child-selector">
-        <span className="child-label">Current Child:</span>
-        <div className="child-dropdown">
-          <span className="child-name">{selectedChild || 'Select'}</span>
-          <ChevronDown size={16} />
-        </div>
-      </div>
+      {/* Current Child Dropdown */}
+      <ChildSelector
+        children={children}
+        onSelectChild={handleChildSelect} // Pass function directly without changing format
+        selectedChild={selectedChild}
+      />
 
       {/* Upload Avatar */}
       <div className="upload-section">
         <div className="upload-circle">
-          <Camera size={32} color="#777" />
+          {profileImage ? (
+            <img src={profileImage} alt="Profile" className="avatar-image" />
+          ) : (
+            <Camera size={32} color="#777" />
+          )}
         </div>
-        <button className="upload-button">Upload</button>
+        <label htmlFor="file-upload" className="upload-button">
+          Upload
+        </label>
+        <input
+          type="file"
+          id="file-upload"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+        />
       </div>
 
-      {/* Activity Cards */}
+      {/* Activity Grid */}
       <div className="activity-grid">
-        <div className="activity-card">
+        <div className="activity-card" onClick={() => navigate('/feeding')}>
           <Baby size={28} />
           <span>Feeding</span>
         </div>
@@ -79,7 +119,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Summary */}
+      {/* Today's Summary Section */}
       <div className="summary-section">
         <h3 className="summary-title">Today's Summary</h3>
         <div className="summary-grid">
@@ -100,21 +140,20 @@ const Home: React.FC = () => {
 
       {/* Bottom Navigation */}
       <div className="bottom-nav">
-        <div className="bottom-icon">
-          <Music size={20} />
+        <div className="bottom-icon" onClick={() => navigate('/lullabies')}>
+          <Music size={24} />
           <span>Lullabies</span>
         </div>
-        <div className="bottom-icon">
-          <Book size={20} />
+        <div className="bottom-icon" onClick={() => navigate('/books')}>
+          <Book size={24} />
           <span>Books</span>
         </div>
-        <div className="bottom-icon">
-          <FileText size={20} />
+        <div className="bottom-icon" onClick={() => navigate('/reports')}>
+          <FileText size={24} />
           <span>Reports</span>
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="home-footer">
         BabyNest © 2025 • Made with 💖 for families
       </footer>

@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     e.toLowerCase().includes(email.toLowerCase())
   );
 
-  // Clean state on mount
+  // Reset form when component mounts
   useEffect(() => {
     setEmail('');
     setPassword('');
@@ -31,37 +31,30 @@ const Login: React.FC = () => {
     setIsLoading(false);
   }, []);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      console.log('Logging in with', email, password);
+    setTimeout(() => {
+      const storedName = localStorage.getItem('userName') || 'Guest';
 
-      setTimeout(() => {
-        const storedName = localStorage.getItem('userName') || 'Guest'; // 🔒 Hardcoded or can fetch from DB in real apps
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userName', storedName);
 
-        // Save to localStorage
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userName', storedName);
+      addEmail(email);
 
-        // Add to dropdown
-        addEmail(email);
+      navigate('/dashboard', {
+        state: { email, name: storedName },
+      });
 
-        // Redirect
-        navigate('/dashboard', { state: { email, name: storedName } });
-        setIsLoading(false);
-      }, 1500);
-    } catch (error) {
-      console.error('Login failed:', error);
       setIsLoading(false);
-    }
+    }, 1500);
   };
 
   return (
     <div className="login-container-wrapper">
       <div className="login-content">
-        {/* ✅ Logo Section */}
+        {/* Logo */}
         <div className="login-logo-section">
           <div className="logo-container">
             <img src={logo} alt="BabyNest Logo" className="logo-image" />
@@ -70,14 +63,15 @@ const Login: React.FC = () => {
           <p className="app-tagline">Your baby's digital nest</p>
         </div>
 
-        {/* ✅ Form */}
-        <form onSubmit={handleLogin} className="login-form">
-          {/* Email Field */}
+        {/* Login Form */}
+        <form onSubmit={handleLogin} className="login-form" autoComplete="off">
+          {/* Email */}
           <div className="form-group email-with-dropdown">
             <label htmlFor="email" className="form-label">Email Address</label>
             <div className="input-wrapper">
               <input
                 id="email"
+                name="email"
                 type="email"
                 className="login-input"
                 placeholder="Enter your email"
@@ -87,7 +81,7 @@ const Login: React.FC = () => {
                   setShowDropdown(true);
                 }}
                 onFocus={() => setShowDropdown(true)}
-                onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                 autoComplete="off"
                 required
               />
@@ -97,24 +91,24 @@ const Login: React.FC = () => {
                   {filteredEmails.map((item, index) => (
                     <li key={index}>
                       <span
-  onMouseDown={() => {
-    setEmail(item);
-    setShowDropdown(false);
-  }}
->
-  {item}
-</span>
-<button
-  type="button"
-  className="email-delete-icon"
-  onMouseDown={(e) => {
-    e.preventDefault(); // prevent blur
-    e.stopPropagation(); // prevent triggering parent
-    deleteEmail(item);
-  }}
->
-  ×
-</button>
+                        onMouseDown={() => {
+                          setEmail(item);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        {item}
+                      </span>
+                      <button
+                        type="button"
+                        className="email-delete-icon"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          deleteEmail(item);
+                        }}
+                      >
+                        ×
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -122,7 +116,7 @@ const Login: React.FC = () => {
             </div>
           </div>
 
-          {/* Password Field */}
+          {/* Password */}
           <div className="form-group">
             <div className="password-header">
               <label htmlFor="password" className="form-label">Password</label>
@@ -131,12 +125,13 @@ const Login: React.FC = () => {
             <div className="input-wrapper">
               <input
                 id="password"
+                name="password"
                 type={showPassword ? 'text' : 'password'}
                 className="login-input"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
               />
               <button
@@ -162,7 +157,7 @@ const Login: React.FC = () => {
           <span className="divider-line" />
         </div>
 
-        {/* Sign Up Link */}
+        {/* Signup Link */}
         <div className="signup-section">
           <p className="signup-text">Don't have an account?</p>
           <Link to="/signup" className="signup-link">Create an account</Link>

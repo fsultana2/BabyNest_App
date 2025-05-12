@@ -1,13 +1,129 @@
-/* src/styles/Layout.css */
+/* Ensure Buttons are in the center for all pages */
+.toggle-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+}
+.toggle-bar-wrapper {
+  padding-top: 20px; /* Give space between the header and the toggle bar */
+}
+
+/* Style for individual buttons */
+.toggle-button {
+  flex: 1;
+  padding: 0.6rem;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.2rem;  /* Slightly bigger font */
+  color: #040404; /* Grey text for inactive buttons */
+  background: transparent;
+  border: 2px solid #d1cfcf; /* Light grey border */
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+.toggle-button:hover {
+  background-color: #f0f0f0; /* Hover effect */
+}
+
+.toggle-button.active {
+  background-color: #b58bbc; /* Yellow background for the active button */
+  color: #ffffff; /* White text for active button */
+  border-color: #ae4779; /* Match border color to the active background */
+}
+
+
+/* Layout wrapper for the entire page */
 .layout-wrapper {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fff; /* default white background */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #faf0da, #f3e5f6, #d7f6e0, #deecfa); /* Your gradient */
 }
 
 .layout-main {
-  flex: 1;
-  /*padding: 1rem;*/
-  box-sizing: border-box;
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* Ensure content is centered */
+.child-page, .feeding-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Form styles */
+.child-form, .feeding-form {
+  margin: 20px 0;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.child-name-input, .dob-wrapper input, .amount-input, .time-input {
+  padding: 10px;
+  margin: 5px;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Button styles */
+.add-button {
+  background-color: #f6d02f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #f0b636;
+}
+
+/* Child profile card style */
+.child-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+}
+
+/* Delete button */
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: #f44336;
+  cursor: pointer;
+}
+
+/* Delete all button */
+.delete-all {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-all:hover {
+  background-color: #d32f2f;
 }
