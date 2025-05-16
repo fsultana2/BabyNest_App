@@ -1,12 +1,12 @@
-// src/pages/Feeding.tsx
-import React from 'react';
-import Layout from '../layouts/Layout';  // Import Layout from the layouts folder
-import FeedingTracker from '../components/FeedingTracker';  // Import your FeedingTracker component
+import { useLocation } from 'react-router-dom';
+import Layout from '../layouts/Layout';
+import FeedingTracker from '../components/FeedingTracker';
 
 const Feeding: React.FC = () => {
+  const location = useLocation();
   return (
-    <Layout>  {/* Wrap FeedingTracker with Layout to include Header and Footer */}
-      <FeedingTracker />  {/* Display the FeedingTracker component */}
+    <Layout>
+      <FeedingTracker />
     </Layout>
   );
 };

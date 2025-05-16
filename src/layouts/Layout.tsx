@@ -37,8 +37,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
       </div>
       <main className="layout-main">
-        {children}
-      </main>
+  <React.Fragment key={location.key}>
+    {children}
+  </React.Fragment>
+</main>
+
 
       {/* Footer is always shown */}
       <Footer />
