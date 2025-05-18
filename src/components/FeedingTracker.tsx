@@ -5,17 +5,17 @@ import '../styles/FeedingTracker.css';
 const FeedingTracker: React.FC = () => {
   const location = useLocation();
 
-  const [formulaLogs, setFormulaLogs] = useState<{ oz: string; time: string }[]>(() => {
+  const [formulaLogs, setFormulaLogs] = useState<{ oz: string; time: string; date: string }[]>(() => {
     const stored = localStorage.getItem('formulaLogs');
     return stored ? JSON.parse(stored) : [];
   });
 
-  const [breastLogs, setBreastLogs] = useState<{ start: string; duration: number }[]>(() => {
+  const [breastLogs, setBreastLogs] = useState<{ start: string; duration: number; date: string }[]>(() => {
     const stored = localStorage.getItem('breastLogs');
     return stored ? JSON.parse(stored) : [];
   });
 
-  const [solidsLogs, setSolidsLogs] = useState<{ meal: string; food: string; time: string }[]>(() => {
+  const [solidsLogs, setSolidsLogs] = useState<{ meal: string; food: string; time: string; date: string }[]>(() => {
     const stored = localStorage.getItem('solidsLogs');
     return stored ? JSON.parse(stored) : [];
   });
@@ -79,7 +79,8 @@ const FeedingTracker: React.FC = () => {
   const decrementAmount = () => setOzAmount(Math.max(ozAmount - 1, 0));
 
   const addFormulaLog = () => {
-    const newLog = { oz: ozAmount.toString(), time: feedingTime };
+    const today = new Date().toISOString().split('T')[0];
+    const newLog = { oz: ozAmount.toString(), time: feedingTime, date: today };
     const updated = [...formulaLogs, newLog];
     setFormulaLogs(updated);
     localStorage.setItem('formulaLogs', JSON.stringify(updated));
@@ -88,7 +89,8 @@ const FeedingTracker: React.FC = () => {
   };
 
   const addBreastLog = () => {
-    const newLog = { start: breastStartTime, duration: elapsedSeconds };
+    const today = new Date().toISOString().split('T')[0];
+    const newLog = { start: breastStartTime, duration: elapsedSeconds, date: today };
     const updated = [...breastLogs, newLog];
     setBreastLogs(updated);
     localStorage.setItem('breastLogs', JSON.stringify(updated));
@@ -97,7 +99,8 @@ const FeedingTracker: React.FC = () => {
   };
 
   const addSolidsLog = () => {
-    const newLog = { meal: mealType, food: foodType, time: solidsTime };
+    const today = new Date().toISOString().split('T')[0];
+    const newLog = { meal: mealType, food: foodType, time: solidsTime, date: today };
     const updated = [...solidsLogs, newLog];
     setSolidsLogs(updated);
     localStorage.setItem('solidsLogs', JSON.stringify(updated));
@@ -165,10 +168,13 @@ const FeedingTracker: React.FC = () => {
 
           <h5>Summary</h5>
           {formulaLogs.map((log, index) => (
-            <div key={index} className="summary">
-              <p>{log.oz} oz at {log.time} <button onClick={() => deleteEntry(index)} className="delete-entry-button">❌</button></p>
-            </div>
-          ))}
+  <div key={index} className="summary">
+    <p>{log.oz} oz at {log.time}
+      <button onClick={() => deleteEntry(index)} className="delete-entry-button">❌</button>
+    </p>
+  </div>
+))}
+
           <p>Total: {formulaLogs.reduce((sum, log) => sum + parseFloat(log.oz), 0)} oz</p>
         </div>
       )}
@@ -210,15 +216,18 @@ const FeedingTracker: React.FC = () => {
 
           <h5>Summary</h5>
           {breastLogs.map((log, index) => {
-            const hrs = Math.floor(log.duration / 3600);
-            const mins = Math.floor((log.duration % 3600) / 60);
-            const secs = log.duration % 60;
-            return (
-              <div key={index} className="summary">
-                <p>{hrs}h {mins}m {secs}s at {log.start} <button onClick={() => deleteBreastEntry(index)} className="delete-entry-button">❌</button></p>
-              </div>
-            );
-          })}
+  const hrs = Math.floor(log.duration / 3600);
+  const mins = Math.floor((log.duration % 3600) / 60);
+  const secs = log.duration % 60;
+  return (
+    <div key={index} className="summary">
+      <p>{hrs}h {mins}m {secs}s at {log.start}
+        <button onClick={() => deleteBreastEntry(index)} className="delete-entry-button">❌</button>
+      </p>
+    </div>
+  );
+})}
+
           <p>Total: {(() => {
             const total = breastLogs.reduce((sum, log) => sum + log.duration, 0);
             const h = Math.floor(total / 3600);
@@ -255,10 +264,13 @@ const FeedingTracker: React.FC = () => {
 
           <h5>Summary</h5>
           {solidsLogs.map((log, index) => (
-            <div key={index} className="summary">
-              <p>{log.meal} – {log.food} at {log.time} <button onClick={() => deleteSolidsEntry(index)} className="delete-entry-button">❌</button></p>
-            </div>
-          ))}
+  <div key={index} className="summary">
+    <p>{log.meal} – {log.food} at {log.time}
+      <button onClick={() => deleteSolidsEntry(index)} className="delete-entry-button">❌</button>
+    </p>
+  </div>
+))}
+
           <p>Total: {solidsLogs.length} entries</p>
         </div>
       )}
