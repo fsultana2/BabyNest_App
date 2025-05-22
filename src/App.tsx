@@ -8,6 +8,11 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import ChildProfiles from './pages/ChildProfiles';
 import Feeding from './pages/Feeding';
+import SleepTracker from './pages/SleepTracker';
+
+// Inside your <Routes>
+<Route path="/sleep" element={<SleepTracker />} />
+
 
 function App() {
   const location = useLocation(); // ✅ Get current path
@@ -23,6 +28,7 @@ function App() {
       <Route path="/settings" element={<Settings />} />
       <Route path="/child-profiles" element={<ChildProfiles />} />
       <Route path="/feeding" element={<Feeding key={location.key} />}/>
+      <Route path="/sleep" element={<SleepTracker />} />
     </Routes>
   );
 }

@@ -1,142 +1,128 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/FeedingTracker.css';
+import useSelectedChild from '../hooks/useSelectedChild';
+type FormulaLog = { oz: string; time: string; date: string; child: string };
+type BreastLog = { start: string; duration: number; date: string; child: string };
+type SolidsLog = { meal: string; food: string; time: string; date: string; child: string };
 
 const FeedingTracker: React.FC = () => {
-  const location = useLocation();
+    const location = useLocation();
+    const { selectedChild } = useSelectedChild();
 
-  const [formulaLogs, setFormulaLogs] = useState<{ oz: string; time: string; date: string }[]>(() => {
-    const stored = localStorage.getItem('formulaLogs');
-    return stored ? JSON.parse(stored) : [];
-  });
 
-  const [breastLogs, setBreastLogs] = useState<{ start: string; duration: number; date: string }[]>(() => {
-    const stored = localStorage.getItem('breastLogs');
-    return stored ? JSON.parse(stored) : [];
-  });
 
-  const [solidsLogs, setSolidsLogs] = useState<{ meal: string; food: string; time: string; date: string }[]>(() => {
-    const stored = localStorage.getItem('solidsLogs');
-    return stored ? JSON.parse(stored) : [];
-  });
+  
+  const [formulaLogs, setFormulaLogs] = useState<FormulaLog[]>(() => {
+      const stored = localStorage.getItem('formulaLogs');
+      return stored ? JSON.parse(stored) : [];
+    });
+  
+    const [breastLogs, setBreastLogs] = useState<BreastLog[]>(() => {
+      const stored = localStorage.getItem('breastLogs');
+      return stored ? JSON.parse(stored) : [];
+    });
+  
+    const [solidsLogs, setSolidsLogs] = useState<SolidsLog[]>(() => {
+      const stored = localStorage.getItem('solidsLogs');
+      return stored ? JSON.parse(stored) : [];
+    });
 
-  const [feedingType, setFeedingType] = useState<'formula' | 'breast' | 'solids'>('formula');
-  const [ozAmount, setOzAmount] = useState(0);
-  const [feedingTime, setFeedingTime] = useState('');
-  const [breastStartTime, setBreastStartTime] = useState('');
-  const [breastDuration, setBreastDuration] = useState(0);
-  const [isTiming, setIsTiming] = useState(false);
-  const [timerStart, setTimerStart] = useState<Date | null>(null);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [mealType, setMealType] = useState('Breakfast');
-  const [foodType, setFoodType] = useState('');
-  const [solidsTime, setSolidsTime] = useState('');
-
-  useEffect(() => {
-    const restoreLogs = () => {
-      try {
-        const storedFormulaLogs = JSON.parse(localStorage.getItem('formulaLogs') || '[]');
-        const storedBreastLogs = JSON.parse(localStorage.getItem('breastLogs') || '[]');
-        const storedSolidsLogs = JSON.parse(localStorage.getItem('solidsLogs') || '[]');
-        setFormulaLogs(storedFormulaLogs);
-        setBreastLogs(storedBreastLogs);
-        setSolidsLogs(storedSolidsLogs);
-        console.log('✅ Logs restored from localStorage');
-      } catch (e) {
-        console.error('❌ Failed to restore logs', e);
+    const [feedingType, setFeedingType] = useState<'formula' | 'breast' | 'solids'>('formula');
+    const [ozAmount, setOzAmount] = useState(0);
+    const [feedingTime, setFeedingTime] = useState('');
+    const [breastStartTime, setBreastStartTime] = useState('');
+    const [breastDuration, setBreastDuration] = useState(0);
+    const [isTiming, setIsTiming] = useState(false);
+    const [timerStart, setTimerStart] = useState<Date | null>(null);
+    const [elapsedSeconds, setElapsedSeconds] = useState(0);
+    const [mealType, setMealType] = useState('Breakfast');
+    const [foodType, setFoodType] = useState('');
+    const [solidsTime, setSolidsTime] = useState('');
+  
+    useEffect(() => {
+      const restoreLogs = () => {
+        try {
+          setFormulaLogs(JSON.parse(localStorage.getItem('formulaLogs') || '[]'));
+          setBreastLogs(JSON.parse(localStorage.getItem('breastLogs') || '[]'));
+          setSolidsLogs(JSON.parse(localStorage.getItem('solidsLogs') || '[]'));
+        } catch (e) {
+          console.error('Failed to restore logs', e);
+        }
+      };
+      restoreLogs();
+      window.addEventListener('focus', restoreLogs);
+      return () => window.removeEventListener('focus', restoreLogs);
+    }, [location.pathname]);
+  
+    useEffect(() => {
+      let interval: NodeJS.Timeout;
+      if (isTiming && timerStart) {
+        interval = setInterval(() => {
+          const seconds = Math.floor((Date.now() - timerStart.getTime()) / 1000);
+          setElapsedSeconds(seconds);
+        }, 1000);
+      }
+      return () => clearInterval(interval);
+    }, [isTiming, timerStart]);
+  
+    useEffect(() => {
+      localStorage.setItem('formulaLogs', JSON.stringify(formulaLogs));
+    }, [formulaLogs]);
+  
+    useEffect(() => {
+      localStorage.setItem('breastLogs', JSON.stringify(breastLogs));
+    }, [breastLogs]);
+  
+    useEffect(() => {
+      localStorage.setItem('solidsLogs', JSON.stringify(solidsLogs));
+    }, [solidsLogs]);
+  
+    const incrementAmount = () => setOzAmount(ozAmount + 1);
+    const decrementAmount = () => setOzAmount(Math.max(ozAmount - 1, 0));
+  
+    const today = new Date().toISOString().split('T')[0];
+  
+    const addFormulaLog = () => {
+      const newLog: FormulaLog = { oz: ozAmount.toString(), time: feedingTime, date: today, child: selectedChild };
+      const updated: FormulaLog[] = [...formulaLogs, newLog];
+      setFormulaLogs(updated);
+      setOzAmount(0);
+      setFeedingTime('');
+    };
+  
+    const addBreastLog = () => {
+      const newLog: BreastLog = { start: breastStartTime, duration: elapsedSeconds, date: today, child: selectedChild };
+      const updated: BreastLog[] = [...breastLogs, newLog];
+      setBreastLogs(updated);
+      setBreastStartTime('');
+      setElapsedSeconds(0);
+    };
+  
+    const addSolidsLog = () => {
+      const newLog: SolidsLog = { meal: mealType, food: foodType, time: solidsTime, date: today, child: selectedChild };
+      const updated: SolidsLog[] = [...solidsLogs, newLog];
+      setSolidsLogs(updated);
+      setMealType('Breakfast');
+      setFoodType('');
+      setSolidsTime('');
+    };
+  
+    const deleteEntry = (index: number) => setFormulaLogs(formulaLogs.filter((_, i) => i !== index));
+    const deleteBreastEntry = (index: number) => setBreastLogs(breastLogs.filter((_, i) => i !== index));
+    const deleteSolidsEntry = (index: number) => setSolidsLogs(solidsLogs.filter((_, i) => i !== index));
+  
+    const deleteAllLogs = () => {
+      if (window.confirm('Are you sure you want to delete all feeding logs?')) {
+        setFormulaLogs([]);
+        setBreastLogs([]);
+        setSolidsLogs([]);
+        localStorage.removeItem('formulaLogs');
+        localStorage.removeItem('breastLogs');
+        localStorage.removeItem('solidsLogs');
       }
     };
-
-    restoreLogs();
-    window.addEventListener('focus', restoreLogs);
-    return () => window.removeEventListener('focus', restoreLogs);
-  }, [location.pathname]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isTiming && timerStart) {
-      interval = setInterval(() => {
-        const seconds = Math.floor((Date.now() - timerStart.getTime()) / 1000);
-        setElapsedSeconds(seconds);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isTiming, timerStart]);
-
-  useEffect(() => {
-    localStorage.setItem('formulaLogs', JSON.stringify(formulaLogs));
-  }, [formulaLogs]);
-
-  useEffect(() => {
-    localStorage.setItem('breastLogs', JSON.stringify(breastLogs));
-  }, [breastLogs]);
-
-  useEffect(() => {
-    localStorage.setItem('solidsLogs', JSON.stringify(solidsLogs));
-  }, [solidsLogs]);
-
-  const incrementAmount = () => setOzAmount(ozAmount + 1);
-  const decrementAmount = () => setOzAmount(Math.max(ozAmount - 1, 0));
-
-  const addFormulaLog = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const newLog = { oz: ozAmount.toString(), time: feedingTime, date: today };
-    const updated = [...formulaLogs, newLog];
-    setFormulaLogs(updated);
-    localStorage.setItem('formulaLogs', JSON.stringify(updated));
-    setOzAmount(0);
-    setFeedingTime('');
-  };
-
-  const addBreastLog = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const newLog = { start: breastStartTime, duration: elapsedSeconds, date: today };
-    const updated = [...breastLogs, newLog];
-    setBreastLogs(updated);
-    localStorage.setItem('breastLogs', JSON.stringify(updated));
-    setBreastStartTime('');
-    setElapsedSeconds(0);
-  };
-
-  const addSolidsLog = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const newLog = { meal: mealType, food: foodType, time: solidsTime, date: today };
-    const updated = [...solidsLogs, newLog];
-    setSolidsLogs(updated);
-    localStorage.setItem('solidsLogs', JSON.stringify(updated));
-    setMealType('Breakfast');
-    setFoodType('');
-    setSolidsTime('');
-  };
-
-  const deleteEntry = (index: number) => {
-    const updated = formulaLogs.filter((_, i) => i !== index);
-    setFormulaLogs(updated);
-    localStorage.setItem('formulaLogs', JSON.stringify(updated));
-  };
-
-  const deleteBreastEntry = (index: number) => {
-    const updated = breastLogs.filter((_, i) => i !== index);
-    setBreastLogs(updated);
-    localStorage.setItem('breastLogs', JSON.stringify(updated));
-  };
-
-  const deleteSolidsEntry = (index: number) => {
-    const updated = solidsLogs.filter((_, i) => i !== index);
-    setSolidsLogs(updated);
-    localStorage.setItem('solidsLogs', JSON.stringify(updated));
-  };
-
-  const deleteAllLogs = () => {
-    if (window.confirm('Are you sure you want to delete all feeding logs?')) {
-      setFormulaLogs([]);
-      setBreastLogs([]);
-      setSolidsLogs([]);
-      localStorage.removeItem('formulaLogs');
-      localStorage.removeItem('breastLogs');
-      localStorage.removeItem('solidsLogs');
-    }
-  };
+  
 
   return (
     <div className="feeding-tracker">
@@ -165,17 +151,16 @@ const FeedingTracker: React.FC = () => {
             </div>
             <button type="submit" className="add-button">Add</button>
           </form>
-
           <h5>Summary</h5>
-          {formulaLogs.map((log, index) => (
-  <div key={index} className="summary">
-    <p>{log.oz} oz at {log.time}
-      <button onClick={() => deleteEntry(index)} className="delete-entry-button">❌</button>
-    </p>
-  </div>
-))}
+          {formulaLogs.filter(log => log.child === selectedChild).map((log, index) =>  (
+            <div key={index} className="summary">
+              <p>{log.oz} oz at {log.time} <button onClick={() => deleteEntry(index)} className="delete-entry-button">❌</button></p>
+            </div>
+          ))}
+          <p>Total: {formulaLogs
+  .filter(log => log.child === selectedChild)
+  .reduce((sum, log) => sum + parseFloat(log.oz), 0)} oz</p>
 
-          <p>Total: {formulaLogs.reduce((sum, log) => sum + parseFloat(log.oz), 0)} oz</p>
         </div>
       )}
 
@@ -213,28 +198,28 @@ const FeedingTracker: React.FC = () => {
             </div>
             <button type="submit" className="add-button">Add</button>
           </form>
-
           <h5>Summary</h5>
-          {breastLogs.map((log, index) => {
-  const hrs = Math.floor(log.duration / 3600);
-  const mins = Math.floor((log.duration % 3600) / 60);
-  const secs = log.duration % 60;
-  return (
-    <div key={index} className="summary">
-      <p>{hrs}h {mins}m {secs}s at {log.start}
-        <button onClick={() => deleteBreastEntry(index)} className="delete-entry-button">❌</button>
-      </p>
-    </div>
-  );
-})}
+          {breastLogs.filter(log => log.child === selectedChild).map((log, index) => {
+            const hrs = Math.floor(log.duration / 3600);
+            const mins = Math.floor((log.duration % 3600) / 60);
+            const secs = log.duration % 60;
+            return (
+              <div key={index} className="summary">
+                <p>{hrs}h {mins}m {secs}s at {log.start} <button onClick={() => deleteBreastEntry(index)} className="delete-entry-button">❌</button></p>
+              </div>
+            );
+          })}
+          <p>Total: {
+  (() => {
+    const total = breastLogs.filter(log => log.child === selectedChild)
+      .reduce((sum, log) => sum + log.duration, 0);
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    return `${h}h ${m}m ${s}s`;
+  })()
+}</p>
 
-          <p>Total: {(() => {
-            const total = breastLogs.reduce((sum, log) => sum + log.duration, 0);
-            const h = Math.floor(total / 3600);
-            const m = Math.floor((total % 3600) / 60);
-            const s = total % 60;
-            return `${h}h ${m}m ${s}s`;
-          })()}</p>
         </div>
       )}
 
@@ -261,17 +246,14 @@ const FeedingTracker: React.FC = () => {
             </div>
             <button type="submit" className="add-button">Add</button>
           </form>
-
           <h5>Summary</h5>
-          {solidsLogs.map((log, index) => (
-  <div key={index} className="summary">
-    <p>{log.meal} – {log.food} at {log.time}
-      <button onClick={() => deleteSolidsEntry(index)} className="delete-entry-button">❌</button>
-    </p>
-  </div>
-))}
+          {solidsLogs.filter(log => log.child === selectedChild).map((log, index) => (
+            <div key={index} className="summary">
+              <p>{log.meal} – {log.food} at {log.time} <button onClick={() => deleteSolidsEntry(index)} className="delete-entry-button">❌</button></p>
+            </div>
+          ))}
+         <p>Total: {solidsLogs.filter(log => log.child === selectedChild).length} entries</p>
 
-          <p>Total: {solidsLogs.length} entries</p>
         </div>
       )}
 

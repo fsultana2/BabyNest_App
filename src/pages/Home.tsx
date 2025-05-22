@@ -8,6 +8,7 @@ import useSelectedChild from '../hooks/useSelectedChild';
 import '../styles/Home.css';
 import ChildSelector from '../components/ChildSelector'; 
 
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,38 +23,70 @@ const Home: React.FC = () => {
   const [breastSessions, setBreastSessions] = useState(0);
   const [solidMeals, setSolidMeals] = useState<string[]>([]);
   const [todayDate, setTodayDate] = useState('');
+  // Feeding summary states
+  //sleeping summary states
+  const [sleepSummary, setSleepSummary] = useState('');
 
+  //sleeping summary states
+  
   useEffect(() => {
     const savedChildren = JSON.parse(localStorage.getItem('children') || '[]');
     setChildren(savedChildren);
-
+  
     const savedImage = localStorage.getItem('profileImage');
     if (savedImage) setProfileImage(savedImage);
-
+  
     const today = new Date().toISOString().split('T')[0];
     setTodayDate(today);
-    
-
+  
     // Formula
     const formulaLogs = JSON.parse(localStorage.getItem('formulaLogs') || '[]');
-    const todayFormula = formulaLogs.filter((log: any) => log.date === today);
+    const todayFormula = formulaLogs.filter(
+      (log: any) => log.date === today && log.child === selectedChild
+    );
     const totalOz = todayFormula.reduce((sum: number, log: any) => sum + parseFloat(log.oz), 0);
     setFormulaTotal(totalOz);
-
+  
     // Breast
     const breastLogs = JSON.parse(localStorage.getItem('breastLogs') || '[]');
-    const todayBreast = breastLogs.filter((log: any) => log.date === today);
+    const todayBreast = breastLogs.filter(
+      (log: any) => log.date === today && log.child === selectedChild
+    );
     setBreastSessions(todayBreast.length);
-
+  
     // Solids
     const solidsLogs = JSON.parse(localStorage.getItem('solidsLogs') || '[]');
-    const todaySolids = solidsLogs.filter((log: any) => log.date === today);
+    const todaySolids = solidsLogs.filter(
+      (log: any) => log.date === today && log.child === selectedChild
+    );
     const meals = [...new Set(todaySolids.map((log: any) => log.meal))] as string[];
     setSolidMeals(meals);
-    
-  }, []);
-
-
+  
+    // ✅ Sleep
+    const sleepLogs = JSON.parse(localStorage.getItem('sleepLogs') || '[]');
+    const todaySleepLogs = sleepLogs.filter(
+      (log: any) => log.date === today && log.child === selectedChild
+    );
+  
+    const totalMinutes = todaySleepLogs.reduce((sum: number, log: any) => {
+      const start = new Date(log.start).getTime();
+      const end = new Date(log.end).getTime();
+      const duration = (end - start) / 60000;
+      return sum + duration;
+    }, 0);
+  
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.round(totalMinutes % 60);
+    const summaryText =
+      hours > 0 && minutes > 0
+        ? `${hours} hr${hours > 1 ? 's' : ''} ${minutes} min`
+        : hours > 0
+        ? `${hours} hr${hours > 1 ? 's' : ''}`
+        : `${minutes} min`;
+  
+    setSleepSummary(summaryText || '0 min');
+  }, [selectedChild]);
+  
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -92,7 +125,11 @@ const Home: React.FC = () => {
 
       <div className="activity-grid">
         <div className="activity-card" onClick={() => navigate('/feeding')}><Baby size={28} /><span>Feeding</span></div>
-        <div className="activity-card"><Moon size={28} /><span>Sleep</span></div>
+        <div className="activity-card" onClick={() => navigate('/sleep')}>
+  <Moon size={28} />
+  <span>Sleep</span>
+</div>
+
         <div className="activity-card"><Droplet size={28} /><span>Diaper</span></div>
         <div className="activity-card"><Play size={28} /><span>Play</span></div>
       </div>
@@ -106,7 +143,8 @@ const Home: React.FC = () => {
             <div>Breast: {breastSessions} session(s)</div>
             <div>Solids: {solidMeals.join(', ') || 'None'}</div>
           </div>
-          <div className="summary-card"><strong>Sleep:</strong> 8.5 hrs</div>
+          <div className="summary-card"><strong>Sleep:</strong> {sleepSummary}</div>
+
           <div className="summary-card"><strong>Diapers:</strong> 6</div>
           <div className="summary-card"><strong>Play:</strong> 2 hrs</div>
         </div>

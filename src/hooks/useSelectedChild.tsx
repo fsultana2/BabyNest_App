@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-const useSelectedChild = () => {
-  const [selectedChild, setSelectedChild] = useState<string | null>(null);
+type UseSelectedChildHook = {
+  selectedChild: string;
+  setChild: (childName: string) => void;
+};
 
-  useEffect(() => {
-    const storedChild = localStorage.getItem('selectedChild');
-    if (storedChild) {
-      setSelectedChild(storedChild);
-    }
-  }, []);
+const useSelectedChild = (): UseSelectedChildHook => {
+  const [selectedChild, setSelectedChild] = useState<string>(() => {
+    return localStorage.getItem('selectedChild') || '';
+  });
 
   const setChild = (childName: string) => {
     setSelectedChild(childName);

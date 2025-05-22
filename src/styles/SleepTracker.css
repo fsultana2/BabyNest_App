@@ -1,0 +1,229 @@
+.sleep-page {
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .sleep-title {
+    font-size: 22px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .sleep-form {
+    background: #f9f8fe;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  }
+  
+  .sleep-form label {
+    display: block;
+    margin-top: 12px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* 🕒 Clock icon input wrapper */
+  .time-input-wrapper {
+    position: relative;
+    margin-top: 4px;
+    margin-bottom: 16px;
+  }
+  
+  .time-input-wrapper input[type="time"] {
+    width: 100%;
+    padding: 8px 8px 8px 36px; /* Padding for icon on left */
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #000;
+    font-size: 16px;
+    box-sizing: border-box;
+    appearance: none;
+    padding-left: 20px;
+  }
+  
+  .clock-icon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #777;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  
+  /* Optional Safari/Chrome icon fix */
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0);
+    opacity: 0.6;
+    cursor: pointer;
+  }
+  
+  .location-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .loc-btn {
+    flex: 1 1 30%;
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background: #f0f0ff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    color: #333;
+  }
+  
+  .loc-btn.selected {
+    background: #d6ccff;
+    font-weight: bold;
+    border: 2px solid #a6b2f2;
+    color: #000; /* ✅ Black text */
+  }
+  
+  
+  .save-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 10px;
+    background: #cbb5f2;
+    color: #060606;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .save-btn:hover {
+    background: #b59de3;
+  }
+  
+  .sleep-summary {
+    margin-top: 30px;
+  }
+  
+  .sleep-summary h3 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .sleep-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sleep-table th,
+  .sleep-table td {
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+  
+  .sleep-table th {
+    background: #f4f6fc;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Pencil dropdown cell */
+  .dropdown-cell {
+    position: relative;
+    text-align: right;
+    overflow: visible;
+  }
+  
+  
+  .dropdown-wrapper {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .dropdown-toggle {
+    background: #f0f4ff;
+    border: 1px solid #d0d8f0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+  }
+  
+  .dropdown-toggle:hover {
+    background: #dce6fa;
+  }
+  
+  .dropdown-menu.inside-cell {
+    position: absolute;
+    top: 38px;
+    left: auto;
+    right: 0; /* ⬅️ Align it to the right of the button */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+    padding: 4px 0;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+  
+  
+  .sleep-summary,
+  .sleep-table,
+  .sleep-table tr,
+  .sleep-table td {
+    overflow: visible !important;
+  }
+  
+  .dropdown-menu button {
+    background: none;
+    border: none;
+    padding: 10px 14px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu button:hover {
+    background-color: #f0f4ff;
+  }
+  
+  .delete-all-btn {
+    margin-top: 16px;
+    background: #ff4d6d;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+  }
+  
+  .delete-all-btn:hover {
+    background: #e9445e;
+  }
+  
